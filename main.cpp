@@ -4,204 +4,192 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
 
 using namespace std;
-
-// Class Definitions
-class TimeStamp {
-	private:
-  		int hour, minute, seconds;
-
-	public:
-  		TimeStamp() {}
-  		TimeStamp(int hr, int min, int sec) {
-    			this->hour = hr;
-    			this->minute = min;
-    			this->seconds = sec;
-  		}
-
-  void setHour(int hr) { this->hour = hr; }
-
-  void setMinute(int min) { this->minute = min; }
-
-  void setSeconds(int sec) { this->seconds = sec; }
-
-  int getHour() { return this->hour; }
-
-  int getMinute() { return this->minute; }
-
-  int getSeconds() { return this->seconds; }
-};
+using namespace std::chrono;
 
 class Chat {
-private:
-  string message;
-  TimeStamp timestamp;
+	private:
+  		string message;
+  		string timestamp;
 
-public:
-  // default constructor
-  Chat() {}
+	public:
+  		Chat() {}
 
-  // Primary constructor
-  Chat(TimeStamp timestamp, string message) {
-    this->timestamp = timestamp;
-    this->message = message;
-  }
+  		Chat(string timestamp, string message) {
+    			this->timestamp = timestamp;
+    			this->message = message;
+  		}	
 
-  // Mutators and Accessors
-  void SetTimeStamp(TimeStamp timestamp) { this->timestamp = timestamp; }
+  		void SetTimeStamp(string timestamp) { 
+			this->timestamp = timestamp; 
+		}
 
-  TimeStamp GetTimeStamp() { return this->timestamp; }
+  		string GetTimeStamp() {
+		       	return this->timestamp; 
+		}
 
-  void SetMessage(string message) { this->message = message; }
+ 	 	void SetMessage(string message) { 
+			this->message = message; 
+		}
 
-  string GetMessage() { return this->message; }
+  		string GetMessage() {
+		       	return this->message; 
+		}
 };
 
 class Student {
-private:
-  int Idnum;
-  string fname;
-  string lname;
-  float participation;
-  vector<Chat> chat;
+	private:
+  		int Idnum;
+  		string fname;
+  		string lname;
+  		float participation;
+  		vector<Chat> chat;
 
-public:
-  Student() {}
+	public:
+  		Student() {}
+  		Student(int IdNum, string Fname, string Lname, float Participation){
+    			this->Idnum = IdNum;
+    			this->fname = Fname;
+    			this->lname = Lname;
+    			this->participation = Participation;
+  		}
 
-  Student(int IdNum, string Fname, string Lname, float Participation){
-    this->Idnum = IdNum;
-    this->fname = Fname;
-    this->lname = Lname;
-    this->participation = Participation;
-  }
+  		int getIdNum() {
+		   	return Idnum; 
+		}
 
-  int getIdNum() { return Idnum; }
+  		void setIdNum(int IdNum) {
+		       	this->Idnum = IdNum; 
+		}
 
-  void setIdNum(int IdNum) { this->Idnum = IdNum; }
+  		string getFname() {
+		       	return fname; 
+		}
 
-  string getFname() { return fname; }
+  		void setFname(string Fname) {
+		       	this->fname = Fname; 
+		}
 
-  void setFname(string Fname) { this->fname = Fname; }
+  		string getLname() {
+		       	return lname; 
+		}
 
-  string getLname() { return lname; }
+  		void setLname(string Lname) {
+		       	this->lname = Lname; 
+		}
 
-  void setLname(string Lname) { this->lname = Lname; }
+  		float getParticipation() {
+		       	return participation; 
+		}
 
-  float getParticipation() { return participation; }
+  		void setChat(Chat chat) {
+		       	this->chat.push_back(chat); 
+		}
 
-  void setChat(Chat chat) { this->chat.push_back(chat); }
+  		vector<Chat> getChats() {
+		       	return this->chat; 
+		}
 
-  vector<Chat> getChats() { return this->chat; }
-
-  void setParticipation(float Participation) {
-    this->participation = Participation;
-  }
+  		void setParticipation(float Participation) {
+    			this->participation = Participation;
+  		}
 };
 
 class Answer {
-private:
-  TimeStamp timestamp;
-  string ans;
+	private:
+  		string timestamp;
+  		string ans;
 
-public:
-  Answer() {}
+	public:
+  		Answer() {}
 
-  Answer(string Answer, TimeStamp timestamp) {
-    this->ans = Answer;
-    this->timestamp = timestamp;
-  }
+  		Answer(string Answer, string timestamp) {
+   	 		this->ans = Answer;
+    			this->timestamp = timestamp;
+  		}
 
-  void setAnswer(string Answer) { this->Answer = Answer; }
+  		void setAnswer(string Answer) { 
+			this->ans = Answer; 
+		}
 
-  void setTimestamp(TimeStamp timestamp) { this->timestamp = timestamp; }
+  		void setTimestamp(string timestamp) {
+		       	this->timestamp = timestamp; 
+		}
 
-  string getAnswer() { return this->Answer; }
+  		string getAnswer() {
+		       	return this->ans; 
+		}
 
-  TimeStamp getTimestamp() { return this->timestamp; }
+  		string getTimestamp() {
+		       	return this->timestamp; 
+		}
 };
 
-class QuestionNode {
-private:
-  Question data;
-  QuestionNode *nextNode; // Node *nextNode;
+class AnswerNode {
+	private:
+  		Answer data;
+  		AnswerNode *nextNode; // Node *nextNode;
 
-public:
-  // Implementing the Default Constructor
-  QuestionNode() {
-    data = Question();
-    nextNode = NULL;
-  }
+	public:
+  		AnswerNode() {
+    			data = Answer();
+    			nextNode = NULL;
+  		}
 
-  // Implementing the Primary Constructor
-  QuestionNode(Question data) {
-    this->data = data;
-    this->nextNode = NULL;
-  }
+  		AnswerNode(Answer data) {
+    			this->data = data;
+    			this->nextNode = NULL;
+ 	 	} 
 
-  // Implementing the copy Constructor
-  QuestionNode(QuestionNode *obj) {
-    this->data = obj->data;
-    this->nextNode = NULL;
-  }
+  		Answer getData() { return data; }
 
-  // Implementing the getters and setters
-  Question getData() { return data; }
+  		void setData(Answer data) { this->data = data; }
 
-  void setData(Question data) { this->data = data; }
+  		AnswerNode *getNextNode() { return nextNode; }
 
-  QuestionNode *getNextNode() { return nextNode; }
-
-  void setNextNode(QuestionNode *nextNode) { this->nextNode = nextNode; }
-
-  void Display() {
-    cout << data.getQuestion() << endl;
-    cout << data.getAnswer() << endl;
-    cout << data.getTimestamp().getHour() << endl;
-    cout << data.getTimestamp().getMinute() << endl;
-    cout << data.getTimestamp().getSeconds() << endl;
-  }
+  		void setNextNode(AnswerNode *nextNode) { this->nextNode = nextNode; }	
 };
 
-class QuestionLinkedList {
-private:
-  QuestionNode *head; // private Node *head;
+class AnswerLinkedList {
+	private:
+  		AnswerNode *head; 
 
-public:
-  // Implementing the Default Constructor
-  QuestionLinkedList() {
-    head = NULL; // It is null becasue there is nothing to reference to
-                 // becasue the list is empty.
-  }
+	public:	
+  		AnswerLinkedList() {
+    			head = NULL; 
+  		}
 
-  // Implementing the IsEmpty Method
-  bool IsEmpty() {
-    if (head == NULL)
-      return true;
-    else
-      return false;
-  }
+  		bool IsEmpty() {
+    			if (head == NULL)
+      				return true;
+    			else
+      				return false;
+  		}
 
-  // Implementing the Insert at Front method
-  void InsertAtFront(Question data) {
-    QuestionNode *temp = new QuestionNode(data);
-    if (temp != NULL) {
-      if (IsEmpty()) {
-        head = temp;
-      } else {
-        temp->setNextNode(head);
-        head = temp;
-      }
-    }
-  }
+  		void InsertAtFront(Answer data) {
+    			AnswerNode *temp = new AnswerNode(data);
+    			if (temp != NULL) {
+      				if (IsEmpty()) {
+        				head = temp;
+      				}else {
+        				temp->setNextNode(head);
+        				head = temp;
+      				}
+    			}
+  		}
 
-  void Display() {
-    QuestionNode *traverse = head;
-    while (traverse != NULL) {
-      traverse->Display();
-      traverse = traverse->getNextNode();
-    }
-  }
+  		int CountNode() {
+    			AnswerNode *traverse = head;
+			int count = 0;
+    			while (traverse != NULL) {
+      				//traverse->Display();
+				count++;
+      				traverse = traverse->getNextNode();
+    			}
+			return count;
+  		}
 };
 
 void readChatFile(vector<Student> &studentVector, string filepath) {
@@ -210,7 +198,7 @@ void readChatFile(vector<Student> &studentVector, string filepath) {
   	if (!inputFile.is_open()) { 
       	 	cerr << "Failed to open the input file." << endl;
   	}else {
-		regex pattern(R"((\d{2}):(\d{2}):(\d{2}) From (\w+ \w+): (.+))");
+		regex pattern(R"((\d{2}:\d{2}:\d{2}) From (\w+ \w+): (.+))");
     		smatch match;
     		string line;
    		while (getline(inputFile, line)) {
@@ -219,9 +207,9 @@ void readChatFile(vector<Student> &studentVector, string filepath) {
         			Chat chat;
        		 		Student student;
         		
-				chat.SetTimeStamp(TimeStamp(stoi(match[1]), stoi(match[2]), stoi(match[3])));
-        			student.setFname(match[4]);
-        			chat.SetMessage(match[5]);
+				chat.SetTimeStamp(match[1]);
+        			student.setFname(match[2]);
+        			chat.SetMessage(match[3]);
 
         			// Split the full name into first name and last name
         			size_t spacePos = student.getFname().find(' ');
@@ -249,31 +237,81 @@ void readChatFile(vector<Student> &studentVector, string filepath) {
   	}
 }
 
-void readQuestionAnswerFile(vector<Student> &studentVector, string filepath){
+void readAnswerFile(AnswerLinkedList &answerList, string filepath){
+		ifstream inputFile;           
+  		inputFile.open(filepath);     
+  		if (!inputFile.is_open()) { 
+      	 		cerr << "Failed to open the input file." << endl;
+  		}else {
+			regex pattern(R"((\d{2}:\d{2}:\d{2})\s(.+))");
+    			smatch match;
+    			string line;
+   			while (getline(inputFile, line)) {
+      			if (std::regex_match(line, match, pattern)) {
+        			Answer answer;	
+				answer.setTimestamp(match[1]);
+				answer.setAnswer(match[2]);
+        			answerList.InsertAtFront(answer);
+      			}
+    		}
+    		inputFile.close();
+  	}
 
 }
 
+// Function to check if time1 is earlier than time2
+bool isEarlierTime(const string& time1, const string& time2) {
+    	// Helper function to convert time in "hh:mm:ss" format to seconds
+    	auto parseTime = [](const string& time) {
+        	int hours, minutes, seconds;
+        	sscanf(time.c_str(), "%d:%d:%d", &hours, &minutes, &seconds);
+        	return hours * 3600 + minutes * 60 + seconds;
+    	};
+
+    	// Convert time1 and time2 to time points (moments in time)
+    	auto timePoint1 = system_clock::now() + seconds(parseTime(time1));
+    	auto timePoint2 = system_clock::now() + seconds(parseTime(time2));
+
+    	// Compare the time points
+    	return timePoint1 < timePoint2;
+}
+
 int main() {
-  // Declare vectors for student and chat
-  vector<Student> *studentVector = new vector<Student>();
+  	vector<Student> *studentVector = new vector<Student>();
+  	AnswerLinkedList *answerList = new AnswerLinkedList();
 
-  // Declare a linked list for the questions
-  QuestionLinkedList *questionsList = new QuestionLinkedList();
+  	readChatFile(*studentVector, "ChatSession.txt"); 
+	readAnswerFile(*answerList, "Answer.txt");
 
-  readChatFile(*studentVector, "ChatSession.txt"); 
-  
-  
+
+
+	cout << answerList->CountNode() << endl;
+
+
+
+
+
+
+
+
+  /*
   for (int i = 0; i < studentVector->size(); i++) {
     cout << (*studentVector)[i].getFname() << " " << (*studentVector)[i].getLname() << endl;
     cout << "Chats:" << endl;
     for(int j = 0; j<(*studentVector)[i].getChats().size();j++){
-    	cout<< (*studentVector)[i].getChats()[j].GetTimeStamp().getHour() << ":" << 
-		(*studentVector)[i].getChats()[j].GetTimeStamp().getMinute() <<":" <<
-		(*studentVector)[i].getChats()[j].GetTimeStamp().getSeconds()
-	      << " " << (*studentVector)[i].getChats()[j].GetMessage() << endl;
+		cout << (*studentVector)[i].getChats()[j].GetTimeStamp() << " " 
+			<< (*studentVector)[i].getChats()[j].GetMessage() << endl;
     }
     cout << "\n\n" << endl;
+  }*/
+
+  if(isEarlierTime((*studentVector)[1].getChats()[1].GetTimeStamp(),
+  (*studentVector)[0].getChats()[0].GetTimeStamp())){
+ 	cout << "This is earlier" << endl; 
+  }else{
+  	cout << "This is not earlier" << endl;
   }
+
   return 0;
 }
 
