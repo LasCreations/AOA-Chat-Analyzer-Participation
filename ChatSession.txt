@@ -1,0 +1,40 @@
+13:09:23 From Dr.ABC Campbell: Give the final answer when you apply mergesort to sort the list E, X, A, M, P, L, E in alphabetical order.
+13:10:00 From Mia Davis: Sir, the answer is plsecvr
+13:11:15 From Matthew Brown: aeelmxp
+13:11:45 From Michael Smith: The answer for the question is aeelmpx
+13:12:00 From Dr.ABC Campbell: What time can problems with the complexity class P be solved in?
+13:13:00 From Olivia Taylor: Polynomial Time is the answer
+13:13:55 From Amelia Clark: I believe is exponential time 
+13:14:20 From Samuel Adams: Constant Time
+13:15:00 From Dr.ABC Campbell: Where on the Big O complexity chart do most computer scientists draw the line between tractable and intractable algorithms?
+13:16:12 From Mia Davis: Sir, the answer would be between Polynomial and Exponential
+13:17:00 From Amelia Clark: Linear Time Complexity 
+13:18:14 From  Michael Smith: Between Polynomial and Exponential 
+13:19:01 From Dr.ABC Campbell: Which algorithm is used for data compression?
+13:20:20 From William Harris: The shuffle algorithm 
+13:20:59 From Ava Martinez: Huffman  
+13:21:10 From John Anderson: Brute Force 
+13:22:00 From Dr.ABC Campbell: Which algorithm works by selecting the best local choice?
+13:23:10 From Benjamin Lewis: Sir, the answer would be searching and sorting algorithm
+13:24:17 From Daniel Young: I would say Divide and Conquer 
+13:25:25 From William Harris: Sir would the answer be Greedy? 
+13:26:49 From Dr.ABC Campbell: What is the starting point of Prim's algorithm?
+13:27:20 From Mia Davis: Any node would be the starting point 
+13:28:15 From Amelia Clark: Node 
+13:29:30 From Michael Smith: The starting point would be on its edges
+13:30:00 From Dr.ABC Campbell: What is the starting point of Kruskal algorithm?
+13:31:00 From Sarah Johnson: Sir, the answer is its largest edge  
+13:32:10 From Olivia Taylor: Smallest edge, sir
+13:33:40 From Emily Davis: The smallest edge would be the answer
+13:34:04 From Dr.ABC Campbell: Which algorithm category changes the original problem into a similar known problem or simpler problem and uses the solution to solve the initial problem?
+13:35:00 From Matthew Brown: I would say brute force 
+13:35:15 From Isabella Thomas: Transfer and Conquer would be the answer
+13:36:19 From Daniel Young: Divide and Conquer
+13:37:01 From Dr.ABC Campbell: Which algorithm category can solve any computable problem?
+13:38:00 From Ava Martinez: Divide and Conquer
+13:39:34 From Emily Davis: Dynamic
+13:40:20 From Samuel Adams: Sorting and searching 
+13:41:03 From Dr.ABC Campbell: Which algorithm category solves sub-problems once and put them in a table for future use?
+13:42:06 From Benjamin Lewis: Sir, brute force technique 
+13:43:36 From Ethan Anderson: Dynamic Sets 
+13:44:15 From Grace Baker: The Ad Hoc Approach would be the answer

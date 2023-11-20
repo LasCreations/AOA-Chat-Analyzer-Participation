@@ -1,0 +1,10 @@
+13:09:23 AEELMPX
+13:12:00 Polynomial Time
+13:15:00 Between Polynomial and Exponential
+13:19:01 Huffman
+13:22:00 Greedy
+13:26:49 Any Node
+13:30:00 Smallest Edge
+13:34:04 Transfer and Conquer
+13:37:01 Brute Force
+13:41:03 Dynamic Sets
