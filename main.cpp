@@ -179,6 +179,9 @@ class AnswerLinkedList {
       				}
     			}
   		}
+		AnswerNode* getHead() const{
+			return head;
+		}
 
   		int CountNode() {
     			AnswerNode *traverse = head;
@@ -189,8 +192,129 @@ class AnswerLinkedList {
       				traverse = traverse->getNextNode();
     			}
 			return count;
-  		}
+  		}	
 };
+
+
+//Function Declaration 
+void readChatFile(vector<Student>&, string);
+void readAnswerFile(AnswerLinkedList&, string);
+bool isEarlierTime(const string&, const string&);
+vector<string> Tokenizer(const string&);
+
+/*
+void traverseList(const AnswerLinkedList& answerList, vector<Student>& studentVector){
+	
+	//Runs all student
+	for (int i = 0; i < studentVector.size(); i++) {
+      		//cout << (*studentVector)[i].getFname() << " " << (*studentVector)[i].getLname() << endl;
+      		//cout << "Chats:" << endl;
+		//Runs all student chat
+      		for(int j = 0; j<studentVector[i].getChats().size();j++){
+			//compare the time stamp of a answer with the students response
+      			for(AnswerNode* traverse = answerList.getHead(); traverse != NULL; traverse = traverse->getNextNode()){
+				if(isEarlierTime(traverse->getData().getTimestamp(),studentVector[i].getChats()[j].GetTimeStamp())
+					&& isEarlierTime(studentVector[i].getChats()[j].GetTimeStamp(),
+					       	traverse->getNextNode()->getData().getTimestamp())){
+					cout << "jnrei" << endl;	
+				}
+			}
+		}
+    		//cout << "\n\n" << endl;
+  	}		
+}*/
+
+
+void traverseList(const AnswerLinkedList& answerList, vector<Student>& studentVector){
+/*
+for (int i = 0; i < studentVector.size(); i++) {
+        for (int j = 0; j < studentVector[i].getChats().size(); j++) {
+            // Ensure that getHead() is not returning nullptr
+            AnswerNode* traverse = answerList.getHead();
+            while (traverse != nullptr) {
+                // Ensure that getNextNode() is not returning nullptr
+                if (traverse->getNextNode() != nullptr &&
+                    isEarlierTime(traverse->getData().getTimestamp(), studentVector[i].getChats()[j].GetTimeStamp()) &&
+                    isEarlierTime(studentVector[i].getChats()[j].GetTimeStamp(), traverse->getNextNode()->getData().getTimestamp())) {
+                    cout << "jnrei" << endl;
+                }
+                traverse = traverse->getNextNode();
+            }
+        }
+   }*/
+			string currentNode;
+			string previousNode;
+			AnswerNode* traverse = answerList.getHead();
+			while(traverse != NULL){
+		
+				cout << traverse->getData().getTimestamp() << endl;
+				traverse = traverse->getNextNode();
+			}
+
+	/*
+	//Runs all student
+	for (int i = 0; i < studentVector.size(); i++) {
+      		//cout << (*studentVector)[i].getFname() << " " << (*studentVector)[i].getLname() << endl;
+      		//cout << "Chats:" << endl;
+		//Runs all student chat
+      		for(int j = 0; j<studentVector[i].getChats().size();j++){
+			AnswerNode* traverse = answerList.getHead();
+			while(traverse != NULL){
+				cout << traverse->getData().getTimestamp() << endl;
+				traverse->getNextNode();
+			}
+			
+			//compare the time stamp of a answer with the students response
+      			for(AnswerNode* traverse = answerList.getHead(); traverse != NULL; traverse = traverse->getNextNode()){
+				if(isEarlierTime(traverse->getData().getTimestamp(),studentVector[i].getChats()[j].GetTimeStamp())
+					&& isEarlierTime(studentVector[i].getChats()[j].GetTimeStamp(),
+					       	traverse->getNextNode()->getData().getTimestamp())){
+					cout << "jnrei" << endl;	
+				}
+			}
+		}
+    		//cout << "\n\n" << endl;
+  	}	*/	
+}
+
+int main() {
+  	vector<Student> *studentVector = new vector<Student>();
+  	AnswerLinkedList *answerList = new AnswerLinkedList();
+
+  	readChatFile(*studentVector, "ChatSession.txt"); 
+	readAnswerFile(*answerList, "Answer.txt");
+	
+	traverseList(*answerList,*studentVector);
+	
+	//answerList->traverseList();  
+	
+  	return EXIT_SUCCESS;
+}
+
+// Function to check if time1 is earlier than time2
+bool isEarlierTime(const string& time1, const string& time2) {
+    	// Helper function to convert time in "hh:mm:ss" format to seconds
+    	auto parseTime = [](const string& time) {
+        	int hours, minutes, seconds;
+        	sscanf(time.c_str(), "%d:%d:%d", &hours, &minutes, &seconds);
+        	return hours * 3600 + minutes * 60 + seconds;
+    	};
+
+    	// Convert time1 and time2 to time points (moments in time)
+    	auto timePoint1 = system_clock::now() + seconds(parseTime(time1));
+    	auto timePoint2 = system_clock::now() + seconds(parseTime(time2));
+
+    	// Compare the time points
+    	return timePoint1 < timePoint2;
+}
+
+vector<string> Tokenizer(const string& input) {
+	regex wordPattern("\\b(\\w+)\\b");
+    	sregex_token_iterator iter(input.begin(), input.end(), wordPattern, 1);
+    	sregex_token_iterator end;
+    	vector<std::string> result(iter, end);
+    	return result;
+}
 
 void readChatFile(vector<Student> &studentVector, string filepath) {
   	ifstream inputFile;           
@@ -258,60 +382,3 @@ void readAnswerFile(AnswerLinkedList &answerList, string filepath){
   	}
 
 }
-
-// Function to check if time1 is earlier than time2
-bool isEarlierTime(const string& time1, const string& time2) {
-    	// Helper function to convert time in "hh:mm:ss" format to seconds
-    	auto parseTime = [](const string& time) {
-        	int hours, minutes, seconds;
-        	sscanf(time.c_str(), "%d:%d:%d", &hours, &minutes, &seconds);
-        	return hours * 3600 + minutes * 60 + seconds;
-    	};
-
-    	// Convert time1 and time2 to time points (moments in time)
-    	auto timePoint1 = system_clock::now() + seconds(parseTime(time1));
-    	auto timePoint2 = system_clock::now() + seconds(parseTime(time2));
-
-    	// Compare the time points
-    	return timePoint1 < timePoint2;
-}
-
-int main() {
-  	vector<Student> *studentVector = new vector<Student>();
-  	AnswerLinkedList *answerList = new AnswerLinkedList();
-
-  	readChatFile(*studentVector, "ChatSession.txt"); 
-	readAnswerFile(*answerList, "Answer.txt");
-
-
-
-	cout << answerList->CountNode() << endl;
-
-
-
-
-
-
-
-
-  /*
-  for (int i = 0; i < studentVector->size(); i++) {
-    cout << (*studentVector)[i].getFname() << " " << (*studentVector)[i].getLname() << endl;
-    cout << "Chats:" << endl;
-    for(int j = 0; j<(*studentVector)[i].getChats().size();j++){
-		cout << (*studentVector)[i].getChats()[j].GetTimeStamp() << " " 
-			<< (*studentVector)[i].getChats()[j].GetMessage() << endl;
-    }
-    cout << "\n\n" << endl;
-  }*/
-
-  if(isEarlierTime((*studentVector)[1].getChats()[1].GetTimeStamp(),
-  (*studentVector)[0].getChats()[0].GetTimeStamp())){
- 	cout << "This is earlier" << endl; 
-  }else{
-  	cout << "This is not earlier" << endl;
-  }
-
-  return 0;
-}
-
