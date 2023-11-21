@@ -285,9 +285,7 @@ void traverseList(const AnswerLinkedList& answerList, vector<Student>& studentVe
         						}
     						}
 					}
-					cout << "\n\n" << endl;
-
-					//cout << "jnrei" << endl;
+					cout << "\n" << endl;
 					//cout <<"Student Message: " <<  studentVector[i].getChats()[j].GetMessage() << endl;	
 					//cout <<"Student Message TimeStamp: " << studentVector[i].getChats()[j].GetTimeStamp() << endl;	
 					//cout << "Answer TimeStamp: " << traverse->getData().getTimestamp()<< endl;	
@@ -310,12 +308,20 @@ void traverseList(const AnswerLinkedList& answerList, vector<Student>& studentVe
 int main() {
   	vector<Student> *studentVector = new vector<Student>();
   	AnswerLinkedList *answerList = new AnswerLinkedList();
+	string chatFile, answerFile;
 
-  	readChatFile(*studentVector, "ChatSession.txt"); 
-	readAnswerFile(*answerList, "Answer.txt");
+	cout << "Enter Chat Session File Name " << endl;
+	cin >> chatFile;
+  	readChatFile(*studentVector, chatFile); 
+	
+	cout << "Enter Answer File Name " << endl;
+	cin >> answerFile;
+	readAnswerFile(*answerList, answerFile);
 	
 	traverseList(*answerList,*studentVector);
-	
+
+
+	cout << "Generating Student Participation File ... " << endl; 
 	// Open the file for writing
     	std::ofstream outputFile("StudentsParticipation.txt");
 
@@ -327,9 +333,7 @@ int main() {
     		for (const auto& student : *studentVector) {
         		outputFile << student.getFname() << " " << student.getLname() << " " << student.getParticipation() << "\n";
     		}
-	}
-
-    	
+	}	
 
     	// Close the file
     	outputFile.close();	
