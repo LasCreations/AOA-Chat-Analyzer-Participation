@@ -130,17 +130,19 @@ class Answer {
 class AnswerNode {
 	private:
   		Answer data;
-  		AnswerNode *nextNode; // Node *nextNode;
+  		AnswerNode *nextNode, *previousNode; // Node *nextNode;
 
 	public:
   		AnswerNode() {
     			data = Answer();
     			nextNode = NULL;
+			previousNode = NULL;
   		}
 
   		AnswerNode(Answer data) {
     			this->data = data;
     			this->nextNode = NULL;
+			this->previousNode = NULL;
  	 	} 
 
   		Answer getData() { return data; }
@@ -150,49 +152,77 @@ class AnswerNode {
   		AnswerNode *getNextNode() { return nextNode; }
 
   		void setNextNode(AnswerNode *nextNode) { this->nextNode = nextNode; }	
+		
+		AnswerNode *getPreviousNode(){return previousNode;}
+		
+		void setPreviousNode(AnswerNode *previousnode){previousNode = previousnode;}
 };
 
 class AnswerLinkedList {
 	private:
-  		AnswerNode *head; 
-
-	public:	
-  		AnswerLinkedList() {
-    			head = NULL; 
-  		}
-
-  		bool IsEmpty() {
-    			if (head == NULL)
-      				return true;
-    			else
-      				return false;
-  		}
-
-  		void InsertAtFront(Answer data) {
-    			AnswerNode *temp = new AnswerNode(data);
-    			if (temp != NULL) {
-      				if (IsEmpty()) {
-        				head = temp;
-      				}else {
-        				temp->setNextNode(head);
-        				head = temp;
-      				}
-    			}
-  		}
-		AnswerNode* getHead() const{
-			return head;
+		AnswerNode *Head, *Tail;
+	public:
+		AnswerLinkedList(){
+			Head = NULL;
+			Tail = NULL;
 		}
 
-  		int CountNode() {
-    			AnswerNode *traverse = head;
-			int count = 0;
-    			while (traverse != NULL) {
-      				//traverse->Display();
+		AnswerLinkedList(AnswerNode *head, AnswerNode *tail){
+			Head = head;
+			Tail = tail;
+		}
+
+		AnswerNode *GetHead() const{
+			return Head;
+		}
+		
+		AnswerNode *GetTail(){
+			return Tail;
+		}
+
+		void InsertAtFront(Answer dataToInsert){
+			AnswerNode *temp = new AnswerNode(dataToInsert);
+			if(temp!=NULL){
+				if(IsEmpty()){
+					Head = temp;
+					Tail = temp;
+				}else{
+					temp->setNextNode(Head);
+					Head->setPreviousNode(temp);
+					Head = temp;
+				}	
+			}
+		}
+			
+		void InsertAtBack(Answer dataToInsert){
+			AnswerNode *temp = new AnswerNode(dataToInsert);
+			if(temp!=NULL){
+				if(IsEmpty()){
+					Head = temp;
+					Tail = temp;
+				}else{
+					Tail->setNextNode(temp);
+					temp->setPreviousNode(Tail);
+					Tail = temp;
+				}	
+			}
+		}
+	
+		int CountNodes(){
+			AnswerNode *temp = new AnswerNode; //Create a new node
+			int count=0;
+			temp = Head;
+			while(temp!=NULL){
 				count++;
-      				traverse = traverse->getNextNode();
-    			}
+				temp = temp->getNextNode();
+			}
 			return count;
-  		}	
+		}
+		
+		bool IsEmpty(){
+			if(Head==NULL)return true;
+			else return false;
+		}
 };
 
 
@@ -242,39 +272,44 @@ for (int i = 0; i < studentVector.size(); i++) {
             }
         }
    }*/
-			string currentNode;
-			string previousNode;
-			AnswerNode* traverse = answerList.getHead();
-			while(traverse != NULL){
-		
-				cout << traverse->getData().getTimestamp() << endl;
-				traverse = traverse->getNextNode();
-			}
-
 	/*
+	AnswerNode* traverse = answerList.GetHead();
+	while(traverse != NULL){
+		cout << traverse->getData().getTimestamp() << endl;
+		traverse = traverse->getNextNode();
+	}*/
+
+	
 	//Runs all student
 	for (int i = 0; i < studentVector.size(); i++) {
-      		//cout << (*studentVector)[i].getFname() << " " << (*studentVector)[i].getLname() << endl;
-      		//cout << "Chats:" << endl;
+      		cout << studentVector[i].getFname() << " " << studentVector[i].getLname() << endl;
+      		cout << "Chats: \n" << endl;
+		
 		//Runs all student chat
-      		for(int j = 0; j<studentVector[i].getChats().size();j++){
-			AnswerNode* traverse = answerList.getHead();
-			while(traverse != NULL){
-				cout << traverse->getData().getTimestamp() << endl;
-				traverse->getNextNode();
-			}
-			
+      		for(int j = 0; j<studentVector[i].getChats().size();j++){	
 			//compare the time stamp of a answer with the students response
-      			for(AnswerNode* traverse = answerList.getHead(); traverse != NULL; traverse = traverse->getNextNode()){
-				if(isEarlierTime(traverse->getData().getTimestamp(),studentVector[i].getChats()[j].GetTimeStamp())
-					&& isEarlierTime(studentVector[i].getChats()[j].GetTimeStamp(),
-					       	traverse->getNextNode()->getData().getTimestamp())){
-					cout << "jnrei" << endl;	
+			AnswerNode* traverse = answerList.GetHead();
+			while(traverse != NULL){
+				if(traverse->getNextNode() != NULL && 
+					isEarlierTime(traverse->getData().getTimestamp(),
+					studentVector[i].getChats()[j].GetTimeStamp()) &&
+			       		isEarlierTime(studentVector[i].getChats()[j].GetTimeStamp(),
+					traverse->getNextNode()->getData().getTimestamp())){
+					//vector<string> answerVector = ; 
+					//vector<string> chatVector = ;	
+					//cout << "jnrei" << endl;
+					cout <<"Student Message: " <<  studentVector[i].getChats()[j].GetMessage() << endl;	
+					cout <<"Student Message TimeStamp: " << studentVector[i].getChats()[j].GetTimeStamp() << endl;	
+					cout << "Answer TimeStamp: " << traverse->getData().getTimestamp()<< endl;	
+					cout << "Answer : " << traverse->getData().getAnswer()<< endl;	
+					cout << "\n\n" << endl;
+				
 				}
+				traverse = traverse->getNextNode();
 			}
 		}
     		//cout << "\n\n" << endl;
-  	}	*/	
+  	}	
 }
 
 int main() {
@@ -334,7 +369,6 @@ void readChatFile(vector<Student> &studentVector, string filepath) {
 				chat.SetTimeStamp(match[1]);
         			student.setFname(match[2]);
         			chat.SetMessage(match[3]);
-
         			// Split the full name into first name and last name
         			size_t spacePos = student.getFname().find(' ');
         			if (spacePos != std::string::npos) {
@@ -375,7 +409,11 @@ void readAnswerFile(AnswerLinkedList &answerList, string filepath){
         			Answer answer;	
 				answer.setTimestamp(match[1]);
 				answer.setAnswer(match[2]);
-        			answerList.InsertAtFront(answer);
+				if(answerList.IsEmpty()){
+        				answerList.InsertAtFront(answer);
+				}else{
+        				answerList.InsertAtBack(answer);
+				}
       			}
     		}
     		inputFile.close();
