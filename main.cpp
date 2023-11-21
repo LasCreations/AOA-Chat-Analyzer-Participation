@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <cstring> 
 
 using namespace std;
 using namespace std::chrono;
@@ -41,7 +42,6 @@ class Chat {
 
 class Student {
 	private:
-  		int Idnum;
   		string fname;
   		string lname;
   		float participation;
@@ -49,22 +49,13 @@ class Student {
 
 	public:
   		Student() {}
-  		Student(int IdNum, string Fname, string Lname, float Participation){
-    			this->Idnum = IdNum;
+  		Student(string Fname, string Lname, float Participation){
     			this->fname = Fname;
     			this->lname = Lname;
     			this->participation = Participation;
-  		}
+  		}	
 
-  		int getIdNum() {
-		   	return Idnum; 
-		}
-
-  		void setIdNum(int IdNum) {
-		       	this->Idnum = IdNum; 
-		}
-
-  		string getFname() {
+  		string getFname() const{
 		       	return fname; 
 		}
 
@@ -72,7 +63,7 @@ class Student {
 		       	this->fname = Fname; 
 		}
 
-  		string getLname() {
+  		string getLname() const{
 		       	return lname; 
 		}
 
@@ -80,7 +71,7 @@ class Student {
 		       	this->lname = Lname; 
 		}
 
-  		float getParticipation() {
+  		float getParticipation() const{
 		       	return participation; 
 		}
 
@@ -208,7 +199,7 @@ class AnswerLinkedList {
 			}
 		}
 	
-		int CountNodes(){
+		int CountNodes() const{
 			AnswerNode *temp = new AnswerNode; //Create a new node
 			int count=0;
 			temp = Head;
@@ -232,84 +223,88 @@ void readAnswerFile(AnswerLinkedList&, string);
 bool isEarlierTime(const string&, const string&);
 vector<string> Tokenizer(const string&);
 
-/*
-void traverseList(const AnswerLinkedList& answerList, vector<Student>& studentVector){
-	
-	//Runs all student
-	for (int i = 0; i < studentVector.size(); i++) {
-      		//cout << (*studentVector)[i].getFname() << " " << (*studentVector)[i].getLname() << endl;
-      		//cout << "Chats:" << endl;
-		//Runs all student chat
-      		for(int j = 0; j<studentVector[i].getChats().size();j++){
-			//compare the time stamp of a answer with the students response
-      			for(AnswerNode* traverse = answerList.getHead(); traverse != NULL; traverse = traverse->getNextNode()){
-				if(isEarlierTime(traverse->getData().getTimestamp(),studentVector[i].getChats()[j].GetTimeStamp())
-					&& isEarlierTime(studentVector[i].getChats()[j].GetTimeStamp(),
-					       	traverse->getNextNode()->getData().getTimestamp())){
-					cout << "jnrei" << endl;	
-				}
-			}
-		}
-    		//cout << "\n\n" << endl;
-  	}		
-}*/
-
+bool compareByLength(const std::string& a, const std::string& b) {
+    return a.length() < b.length();
+}
 
 void traverseList(const AnswerLinkedList& answerList, vector<Student>& studentVector){
-/*
-for (int i = 0; i < studentVector.size(); i++) {
-        for (int j = 0; j < studentVector[i].getChats().size(); j++) {
-            // Ensure that getHead() is not returning nullptr
-            AnswerNode* traverse = answerList.getHead();
-            while (traverse != nullptr) {
-                // Ensure that getNextNode() is not returning nullptr
-                if (traverse->getNextNode() != nullptr &&
-                    isEarlierTime(traverse->getData().getTimestamp(), studentVector[i].getChats()[j].GetTimeStamp()) &&
-                    isEarlierTime(studentVector[i].getChats()[j].GetTimeStamp(), traverse->getNextNode()->getData().getTimestamp())) {
-                    cout << "jnrei" << endl;
-                }
-                traverse = traverse->getNextNode();
-            }
-        }
-   }*/
-	/*
-	AnswerNode* traverse = answerList.GetHead();
-	while(traverse != NULL){
-		cout << traverse->getData().getTimestamp() << endl;
-		traverse = traverse->getNextNode();
-	}*/
+	float answerCount = answerList.CountNodes() * 2;
 
-	
 	//Runs all student
 	for (int i = 0; i < studentVector.size(); i++) {
+		float matchCount = 0;
+		float participation  = 0.0;
       		cout << studentVector[i].getFname() << " " << studentVector[i].getLname() << endl;
-      		cout << "Chats: \n" << endl;
-		
+      		//cout << "Chats: \n" << endl;
 		//Runs all student chat
       		for(int j = 0; j<studentVector[i].getChats().size();j++){	
 			//compare the time stamp of a answer with the students response
 			AnswerNode* traverse = answerList.GetHead();
 			while(traverse != NULL){
 				if(traverse->getNextNode() != NULL && 
-					isEarlierTime(traverse->getData().getTimestamp(),
-					studentVector[i].getChats()[j].GetTimeStamp()) &&
-			       		isEarlierTime(studentVector[i].getChats()[j].GetTimeStamp(),
-					traverse->getNextNode()->getData().getTimestamp())){
-					//vector<string> answerVector = ; 
-					//vector<string> chatVector = ;	
-					//cout << "jnrei" << endl;
+						isEarlierTime(traverse->getData().getTimestamp(),
+						studentVector[i].getChats()[j].GetTimeStamp()) &&
+			       			isEarlierTime(studentVector[i].getChats()[j].GetTimeStamp(),
+						traverse->getNextNode()->getData().getTimestamp())){
+					
+					vector<string> answerVector = Tokenizer(traverse->getData().getAnswer()); 
+					vector<string> chatVector =  Tokenizer(studentVector[i].getChats()[j].GetMessage());	
+    					
+					std::sort(chatVector.begin(), chatVector.end(), compareByLength);
+    				
+					
 					cout <<"Student Message: " <<  studentVector[i].getChats()[j].GetMessage() << endl;	
-					cout <<"Student Message TimeStamp: " << studentVector[i].getChats()[j].GetTimeStamp() << endl;	
-					cout << "Answer TimeStamp: " << traverse->getData().getTimestamp()<< endl;	
 					cout << "Answer : " << traverse->getData().getAnswer()<< endl;	
+    					
+					for (const auto& answer : answerVector) {
+    						int low = 0;
+    						int high = chatVector.size() - 1;
+
+    						while (low <= high) {
+        						int mid = low + (high - low) / 2;
+
+        						if (chatVector[mid].length() == answer.length()) {
+            							// Check for exact string match when lengths are equal
+            							if (strcasecmp(answer.c_str(), chatVector[mid].c_str()) == 0) {
+                							cout << "FOUND MATCH" << endl;
+                							cout << chatVector[mid] << endl;
+									matchCount++;
+                							break;  // Break out of the loop once a match is found
+            							} else {
+                						// Adjust the search range based on the comparison result
+                							if (strcasecmp(answer.c_str(), chatVector[mid].c_str()) < 0) {
+                    								high = mid - 1;  // Search in the left half
+                							} else {
+                    								low = mid + 1;   // Search in the right half
+                							}
+            							}
+        						} else if (chatVector[mid].length() < answer.length()) {
+            							low = mid + 1;  // Search in the right half
+        						} else {
+            						high = mid - 1;  // Search in the left half
+        						}
+    						}
+					}
 					cout << "\n\n" << endl;
+
+					//cout << "jnrei" << endl;
+					//cout <<"Student Message: " <<  studentVector[i].getChats()[j].GetMessage() << endl;	
+					//cout <<"Student Message TimeStamp: " << studentVector[i].getChats()[j].GetTimeStamp() << endl;	
+					//cout << "Answer TimeStamp: " << traverse->getData().getTimestamp()<< endl;	
+					//cout << "Answer : " << traverse->getData().getAnswer()<< endl;	
+					//cout << "\n\n" << endl;
 				
 				}
 				traverse = traverse->getNextNode();
-			}
-		}
-    		//cout << "\n\n" << endl;
-  	}	
+			}		
+		}	
+			participation = (static_cast<float>(matchCount) / answerCount) * 100;
+			//participation = (matchCount/answerCount) * 100;
+			studentVector[i].setParticipation(participation);
+			cout << studentVector[i].getFname() << endl;
+			cout << studentVector[i].getParticipation() << endl;
+    			cout << "\n" << endl;
+  	}
 }
 
 int main() {
@@ -321,8 +316,23 @@ int main() {
 	
 	traverseList(*answerList,*studentVector);
 	
-	//answerList->traverseList();  
-	
+	// Open the file for writing
+    	std::ofstream outputFile("StudentsParticipation.txt");
+
+    	// Check if the file is opened successfully
+    	if (!outputFile.is_open()) {
+        	std::cerr << "Error opening file "  << std::endl;
+    	}else{
+		// Write each item in the vector to the file
+    		for (const auto& student : *studentVector) {
+        		outputFile << student.getFname() << " " << student.getLname() << " " << student.getParticipation() << "\n";
+    		}
+	}
+
+    	
+
+    	// Close the file
+    	outputFile.close();	
   	return EXIT_SUCCESS;
 }
 
