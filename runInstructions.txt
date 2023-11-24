@@ -1,0 +1,1 @@
+g++ run.cpp `wx-config --cxxflags --libs` -o run

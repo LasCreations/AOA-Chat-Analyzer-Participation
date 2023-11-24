@@ -360,96 +360,131 @@ void MyFrame::ProcessFiles() {
 
 
 void MyFrame::GenerateParticipationFile(vector<Student>& studentVector){
-	// Open the file for writing
-    	std::ofstream outputFile("StudentsParticipation.txt");
 
-    	// Check if the file is opened successfully
-    	if (!outputFile.is_open()) {
-        	std::cerr << "Error opening file "  << std::endl;
-    	}else{
-		// Write each item in the vector to the file
-    		for (const auto& student : studentVector) {
-        		outputFile << student.getFname() << " " << student.getLname() << " " << student.getParticipation() << 
-			      "%" << "\n";
+	try {
+    		// Open the file for writing
+    		std::ofstream outputFile("StudentsParticipation.txt");
+
+    		// Check if the file is opened successfully
+    		if (!outputFile.is_open()) {
+        		throw std::runtime_error("Error opening file");
     		}
-	}	
 
-    	// Close the file
-    	outputFile.close();
+    		// Write each item in the vector to the file
+    		for (const auto& student : studentVector) {
+        		outputFile << student.getFname() << " " << student.getLname()
+			       	<< " " << student.getParticipation() << "%" << "\n";
+    		}
+
+    		// Close the file
+    		outputFile.close();
+	} catch (const std::exception& e) {
+    		std::cerr << "Exception: " << e.what() << std::endl;
+	}
 }
 
 void MyFrame::readChatFile(vector<Student> &studentVector, wxString chatFilePath) {
-  	ifstream inputFile;           //Create a file stream
-  	inputFile.open(chatFilePath);     //Open file
-  	if (!inputFile.is_open()) {  //Check if the file is open or check if any error opening the file
-      	 	cerr << "Failed to open the input file." << endl;
-  	}else {
-		regex pattern(R"((\d{2}:\d{2}:\d{2}) From (\w+ \w+): (.+))"); //Create a pattern
-    		smatch match;
-    		string line; //Create a string to store the lines in the txt file
-   		while (getline(inputFile, line)) { //while there are more files in the txt file scan and store into line
-      			// Try to match the regular expression
-      			if (std::regex_match(line, match, pattern)) { //for each line match the pattern
-        			Chat chat; //Create a chat object and student object
-       		 		Student student;
-        		
-				//Store based on how the scan splits the string
-				//Set data into student object
-				chat.SetTimeStamp(match[1]);
-        			student.setFname(match[2]);
-        			chat.SetMessage(match[3]);
-        			// Split the full name into first name and last name
-        			size_t spacePos = student.getFname().find(' ');
-        			if (spacePos != std::string::npos) {
-          				student.setLname(student.getFname().substr(spacePos + 1));
-          				student.setFname(student.getFname().erase(spacePos));
-        			}	
-				//Set the data into student object
-				student.setParticipation(0.0);
-				student.setChat(chat);
-				
-				bool found = false;	//To avoid storing a student multiple times 
-				for(int i = 0; i<studentVector.size();i++){ //Scan throught the student vector 
-					if(student.getFname()==studentVector[i].getFname() &&  
-						student.getLname()==studentVector[i].getLname()){
-						//check if the student is already there
-						found = true; //change boolean value
-						studentVector[i].setChat(chat);	
-					}
-				}
-				//if the person is not found
-				if(!found){ 
-        				studentVector.push_back(student);
-				}
-      			}
-    		}
-    		inputFile.close();
-  	}
+  	ifstream inputFile;  // Create a file stream
+	inputFile.open(chatFilePath);  // Open file
+	try {
+    		if (!inputFile.is_open()) {
+        		throw std::runtime_error("Failed to open the input file.");
+    		}else {
+        		regex pattern(R"((\d{2}:\d{2}:\d{2}) From (\w+ \w+): (.+))"); // Create a pattern
+        		smatch match;
+        		string line;
+
+        		while (getline(inputFile, line)) {
+            			try {
+                			// Try to match the regular expression
+                			if (std::regex_match(line, match, pattern)) {
+                    				Chat chat;
+                    				Student student;
+
+                    				// Store based on how the scan splits the string
+                    				chat.SetTimeStamp(match[1]);
+                    				student.setFname(match[2]);
+                    				chat.SetMessage(match[3]);
+
+                    				// Split the full name into first name and last name
+                    				size_t spacePos = student.getFname().find(' ');
+                    				if (spacePos != std::string::npos) {
+                        				student.setLname(student.getFname().substr(spacePos + 1));
+                        				student.setFname(student.getFname().erase(spacePos));
+                    				}
+
+                    				student.setParticipation(0.0);
+                    				student.setChat(chat);
+
+                   		 		bool found = false;
+
+                    				for (int i = 0; i < studentVector.size(); i++) {
+                        				if (student.getFname() == studentVector[i].getFname() &&
+                            					student.getLname() == studentVector[i].getLname()) {
+                            					found = true;
+                            					studentVector[i].setChat(chat);
+                        				}
+                    				}
+
+                    				if (!found) {
+                        				studentVector.push_back(student);
+                    				}
+                			}
+            			} catch (const std::exception& e) {
+                			// Handle regex matching exception
+                			cerr << "Regex matching exception: " << e.what() << endl;
+                			// You may choose to continue processing or return from the function
+            			}
+        		}
+        		inputFile.close();
+    			}		
+	} catch (const std::exception& e) {
+    		// Handle file opening exception
+    		cerr << "File opening exception: " << e.what() << endl;
+    		// You may choose to continue processing or return from the function
+	}
 }
 
 void MyFrame::readAnswerFile(AnswerLinkedList &answerList, wxString answerFilePath){
-		ifstream inputFile;           
-  		inputFile.open(answerFilePath);     
-  		if (!inputFile.is_open()) { 
-      	 		cerr << "Failed to open the input file." << endl;
-  		}else {
-			regex pattern(R"((\d{2}:\d{2}:\d{2})\s(.+))");
-    			smatch match;
-    			string line;
-   			while (getline(inputFile, line)) {
-      			if (std::regex_match(line, match, pattern)) {
-        			Answer answer;	
-				answer.setTimestamp(match[1]);
-				answer.setAnswer(match[2]);
-				if(answerList.IsEmpty()){
-        				answerList.InsertAtFront(answer);
-				}else{
-        				answerList.InsertAtBack(answer);
-				}
-      			}
+	
+	ifstream inputFile;
+	inputFile.open(answerFilePath);
+
+	try {
+    		if (!inputFile.is_open()) {
+        		throw std::runtime_error("Failed to open the input file.");
+    		} else {
+        		regex pattern(R"((\d{2}:\d{2}:\d{2})\s(.+))");
+        		smatch match;
+        		string line;
+
+        		while (getline(inputFile, line)) {
+            			try {
+                			if (std::regex_match(line, match, pattern)) {
+                    				Answer answer;
+                    				answer.setTimestamp(match[1]);
+                    				answer.setAnswer(match[2]);
+
+                    				if (answerList.IsEmpty()) {
+                        				answerList.InsertAtFront(answer);
+                    				} else {
+                        				answerList.InsertAtBack(answer);
+                    				}
+                			}
+            			} catch (const std::exception& e) {
+                			// Handle regex matching exception
+                			cerr << "Regex matching exception: " << e.what() << endl;
+                			// You may choose to continue processing or return from the function
+            			}
+        		}
+
+        		inputFile.close();
     		}
-    		inputFile.close();
-  	}
+	} catch (const std::exception& e) {
+    		// Handle file opening exception
+    		cerr << "File opening exception: " << e.what() << endl;
+    		// You may choose to continue processing or return from the function
+	}
 }
 
 // Function to check if time1 is earlier than time2
